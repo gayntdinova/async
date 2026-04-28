@@ -23,23 +23,17 @@ async function run() {
 
 run();
 
-function sendRequest(url) {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
+async function sendRequest(url) {
+    const response = await fetch(url);
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    resolve(JSON.parse(xhr.response));
-                } else {
-                    reject(xhr.status);
-                }
-            }
-        };
-        xhr.send();
-    });
+    if (!response.ok) {
+        throw response.status;
+    }
+
+    return await response.json();
 }
+
+
 
 function reqsToMap(requisites) {
     return requisites.reduce((acc, item) => {
